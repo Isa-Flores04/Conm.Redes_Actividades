@@ -1,0 +1,201 @@
+Cofiguración de Vlans
+
+---------------------------En S1----------------------------
+Switch>ena
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname S1
+S1(config)#vlan 10
+S1(config-vlan)#name Koblenz
+S1(config-vlan)#vlan 20
+S1(config-vlan)#name Simi
+S1(config-vlan)#vlan 30
+S1(config-vlan)#name Nivea
+S1(config-vlan)#exit
+S1(config)#do wr
+Building configuration...
+[OK]
+
+S1(config)#
+S1(config)#inter range fa0/1-3
+S1(config-if-range)#switchport mode trunk
+S1(config-if-range)#switchport trunk allowed vlan 10,20,30
+S1(config-if-range)#do wr
+
+sh vlan brief -->comando para ver vlans
+
+
+----------------------------En S2----------------------------
+Switch>ena
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname S2
+S2(config)#vlan 10
+S2(config-vlan)#name Koblenz
+S2(config-vlan)#vlan 20
+S2(config-vlan)#name Simi
+S2(config-vlan)#vlan 30
+S2(config-vlan)#name Nivea
+S2(config-vlan)#exit
+S2(config)#do wr
+Building configuration...
+[OK]
+S2(config)#inter fa0/4
+S2(config-if)#switchport mode access
+S2(config-if)#switchport access vlan 10
+S2(config-if)#exit
+S2(config)#inter fa0/8
+S2(config-if)#switchport mode access
+S2(config-if)#switchport access vlan 20
+S2(config-if)#exit
+S2(config)#inter fa0/12
+S2(config-if)#switchport mode access
+S2(config-if)#switchport access vlan 30
+S2(config-if)#do wr
+Building configuration...
+[OK]
+S2(config-if)#exit
+S2(config)#exit
+S2#
+%SYS-5-CONFIG_I: Configured from console by console
+
+S2#sh vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/5
+                                                Fa0/6, Fa0/7, Fa0/9, Fa0/10
+                                                Fa0/11, Fa0/13, Fa0/14, Fa0/15
+                                                Fa0/16, Fa0/17, Fa0/18, Fa0/19
+                                                Fa0/20, Fa0/21, Fa0/22, Fa0/23
+                                                Fa0/24, Gig0/1, Gig0/2
+10   Koblenz                          active    Fa0/4
+20   Simi                             active    Fa0/8
+30   Nivea                            active    Fa0/12
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+S2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+S2(config)#inter fa0/1
+S2(config-if)#switchport mode trunk
+
+
+-------------------------En S3-------------------------------
+Switch>ena
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname S3
+S3(config)#vlan 10
+S3(config-vlan)#name Koblenz
+S3(config-vlan)#vlan 20
+S3(config-vlan)#name Simi
+S3(config-vlan)#vlan 30
+S3(config-vlan)#name Nivea
+S3(config-vlan)#exit
+S3(config)#do wr
+Building configuration...
+[OK]
+S3(config)#inter fa0/4
+S3(config-if)#switchport mode access
+S3(config-if)#switchport access vlan 10
+S3(config-if)#exit
+S3(config)#inter fa0/8
+S3(config-if)#switchport mode access
+S3(config-if)#switchport access vlan 20
+S3(config-if)#exit
+S3(config)#inter fa0/12
+S3(config-if)#
+S3#
+%SYS-5-CONFIG_I: Configured from console by console
+
+S3#ena
+S3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+S3(config)#inter fa0/12
+S3(config-if)#switchport mode access
+S3(config-if)#switchport access vlan 30
+S3(config-if)#do wr
+Building configuration...
+[OK]
+S3(config-if)#end
+S3#
+%SYS-5-CONFIG_I: Configured from console by console
+
+S3#sh vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/5
+                                                Fa0/6, Fa0/7, Fa0/9, Fa0/10
+                                                Fa0/11, Fa0/13, Fa0/14, Fa0/15
+                                                Fa0/16, Fa0/17, Fa0/18, Fa0/19
+                                                Fa0/20, Fa0/21, Fa0/22, Fa0/23
+                                                Fa0/24, Gig0/1, Gig0/2
+10   Koblenz                          active    Fa0/4
+20   Simi                             active    Fa0/8
+30   Nivea                            active    Fa0/12
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+S3#ena
+S3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+S3(config)#inter fa0/1
+S3(config-if)#switchport mode trunk
+
+S3(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to up
+
+S3(config-if)#do wr
+
+
+----------------------------En Isa----------------------------
+Router>ena
+Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname Isa
+Isa(config)#interface fa0/0.10
+Isa(config-subif)#encapsulation dot1Q 10
+Isa(config-subif)#ip address 172.17.57.1 255.255.255.0
+Isa(config-subif)#exit
+Isa(config)#interface fa0/0.20
+Isa(config-subif)#encapsulation dot1Q 20
+Isa(config-subif)#ip address 172.17.58.1 255.255.255.0
+Isa(config-subif)#exit
+Isa(config)#interface fa0/0.30
+Isa(config-subif)#encapsulation dot1Q 30
+Isa(config-subif)#ip address 172.17.59.1 255.255.255.0
+Isa(config)#do wr
+Building configuration...
+[OK]
+Isa(config)#ip dhcp pool VLAN10
+Isa(dhcp-config)#network 172.17.57.0 255.255.255.0
+Isa(dhcp-config)#default-router 172.17.57.1
+Isa(dhcp-config)#exit
+Isa(config)#ip dhcp pool VLAN20
+Isa(dhcp-config)#network 172.17.58.0 255.255.255.0
+Isa(dhcp-config)#default-router 172.17.58.1
+Isa(dhcp-config)#exit
+Isa(config)#ip dhcp pool VLAN30
+Isa(dhcp-config)#network 172.17.59.0 255.255.255.0
+Isa(dhcp-config)#default-router 172.17.59.1
+Isa(dhcp-config)#do wr
+Isa(dhcp-config)#exit
+Isa(config)#ip dhcp excluded-address 172.17.57.1
+Isa(config)#ip dhcp excluded-address 172.17.58.1
+Isa(config)#ip dhcp excluded-address 172.17.59.1
+Isa(config)#
+Isa(config)#do wr
+Isa(config)#inter fa0/0
+Isa(config-if)#no sh
+Isa(config)#do wr
+
+
+
+
+
