@@ -1,0 +1,92 @@
+--------------------en switch-----------------------
+ena
+conf t
+hostname S1
+vlan 10
+name Anua
+vlan 20
+name Corx
+vlan 30
+name Tocobo
+exit
+
+inter range fa0/2-3
+switchport mode access
+switchport access vlan 10
+exit
+inter range fa0/4-5
+switchport mode access
+switchport access vlan 20
+exit
+inter range fa0/6-7
+switchport mode access
+switchport access vlan 30
+exit
+interface fa0/1   
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30
+exit
+
+service dhcp
+ip dhcp pool Anua
+network 192.168.57.0 255.255.255.0
+default-router 192.168.57.1
+exit
+
+ip dhcp pool Corx
+network 192.168.58.0 255.255.255.0
+default-router 192.168.58.1
+exit
+
+ip dhcp pool Tocobo
+network 192.168.59.0 255.255.255.0
+default-router 192.168.59.1
+exit
+
+interface vlan 10
+ip address 192.168.57.2 255.255.255.0
+no shutdown
+exit
+
+interface vlan 20
+ip address 192.168.58.2 255.255.255.0
+no shutdown
+exit
+
+interface vlan 30
+ip address 192.168.59.2 255.255.255.0
+no shutdown
+exit
+
+ip dhcp excluded-address 192.168.57.1 192.168.57.10
+ip dhcp excluded-address 192.168.58.1 192.168.58.10
+ip dhcp excluded-address 192.168.59.1 192.168.59.10
+do wr
+------------------en router-------------------------
+ena
+conf t
+hostname Isa
+interface fa0/0
+no sh
+exit
+
+interface fa0/0.10
+encapsulation dot1Q 10
+ip address 192.168.57.1 255.255.255.0
+exit
+interface fa0/0.20
+encapsulation dot1Q 20
+ip address 192.168.58.1 255.255.255.0
+exit
+interface fa0/0.30
+encapsulation dot1Q 30
+ip address 192.168.59.1 255.255.255.0
+exit
+do wr
+
+
+
+
+
+
+
