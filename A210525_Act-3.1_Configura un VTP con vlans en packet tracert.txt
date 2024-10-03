@@ -1,0 +1,81 @@
+--------------en switch1-----------
+ena
+conf t
+hostname S2
+vlan 50
+name LIDTS_VTP
+exit
+
+vtp mode client 
+vtp domain UNACH
+exit
+sh vtp status
+
+vlan 20
+
+------------en switch0----------
+ena
+conf t
+hostname S1
+inter fa 0/24
+switchport mode trunk
+exit
+
+conf t
+vtp mode server
+vtp domain UNACH
+exit
+
+sh vtp status
+
+ena
+conf t
+vlan 10
+name Asus
+vlan 20
+name Dell
+vlan 30
+name Lenovo
+
+inter fa0/10
+switchport access vlan 10
+exit
+inter fa0/11
+switchport access vlan 20
+exit
+inter fa0/12
+switchport access vlan 30
+
+inter fa0/1
+switchport mode trunk
+exit
+
+--------------en router--------------
+ena
+conf t
+hostname Isa
+inter fa0/0
+no sh
+exit
+
+inter fa0/0.10
+encapsulation dot1q 10
+ip address 192.168.57.1 255.255.255.0
+exit
+inter fa0/0.20
+encapsulation dot1q 20
+ip address 192.168.58.1 255.255.255.0
+exit
+inter fa0/0.30
+encapsulation dot1q 30
+ip address 192.168.59.1 255.255.255.0
+exit
+
+
+
+
+
+
+
+
+
